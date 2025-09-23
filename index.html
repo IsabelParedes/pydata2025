@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/astro.svg" />
-    <link rel="stylesheet" href="/node_modules/reveal.js/dist/reveal.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,6 +162,12 @@
           </div>
         </section>
 
+        <section>
+          <h2>LLVM Flang in Action</h2>
+            <pre><code data-trim data-noescape>
+            micromamba install conda-forge/label/emscripten::flang libllvm20 --no-channel-priority
+            </code></pre>
+        </section>
 
         <section class="cosmo-slide">
           <img src="/src/images/cosmo_pkg_walk.png" alt="QuantStack Logo" class="cosmo-img">
