@@ -134,6 +134,35 @@
           </div>
         </section>
 
+        <section>
+          <h2>LLVM Flang</h2>
+          <div class="two-column">
+            <div class="column">
+              <video src="/src/videos/digits.webm" autoplay loop muted playsinline style="max-width: 90%; margin-top: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);"></video>
+              <p><a href="https://gws.phd/posts/fortran_wasm/"><strong>Fortran on WebAssembly</strong>: Patching LLVM Flang to output WebAssembly objects</a></p>
+              <p>by George Stagg</p>
+            </div>
+            <div class="column">
+              <h3>Serge Guelton</h3>
+              <ul>
+                <li style="margin: 0;">Upstreamed contributions:</li>
+                <ul>
+                  <li><a href="https://github.com/llvm/llvm-project/pull/99465">Fix implicit conversion warning when targeting 32bit systems</a></li>
+                  <li><a href="https://github.com/llvm/llvm-project/pull/99822">Explicitly convert shift value to SubscriptValue</a></li>
+                  <li><a href="https://github.com/llvm/llvm-project/pull/101242">Handle missing definitions in cfenv</a></li>
+                  <li><a href="https://github.com/llvm/llvm-project/pull/105589">Fix type used to store result of typeInfo::Value::GetValue</a></li>
+                </ul>
+                <li style="margin: 0;">Additional patches:</li>
+                <ul>
+                  <li><a href="https://github.com/conda-forge/flang-feedstock/blob/emscripten/recipe/patches/0002-Minimal-WASM-support-for-flang.patch">Minimal WASM support for Flang</a></li>
+                  <li><a href="https://github.com/conda-forge/flang-feedstock/blob/emscripten/recipe/patches/0003-Specialize-Flang-to-target-WASM.patch">Specialize Flang to target WASM</a></li>
+                  <li><a href="https://github.com/conda-forge/flang-feedstock/blob/emscripten/recipe/patches/0004-Disable-float128-math.patch">Disable <code>float128</code> math</a></li>
+                </ul>
+              </ul>
+            </div>
+          </div>
+        </section>
+
 
         <section class="cosmo-slide">
           <img src="/src/images/cosmo_pkg_walk.png" alt="QuantStack Logo" class="cosmo-img">
