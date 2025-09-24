@@ -82,24 +82,27 @@
           <div class="two-column">
             <div class="column-top-align">
               <img src="/src/images/c_logo.svg" alt="C language logo" style="height: 4em;">
-              <ul>
-                <li style="margin: 0;">Required</li>
-                <ul>
-                  <li><code>libiconv</code></li>
-                  <li><code>zlib</code></li>
-                  <li><code>bzip2</code></li>
-                  <li><code>lzma</code></li>
-                  <li><code>pcre2</code></li>
-                  <li><code>libcurl</code></li>
-                </ul>
-                <li style="margin: 0;">Optional</li>
-                <ul>
-                  <li><code>libpng</code></li>
-                  <li><code>cairo</code></li>
-                  <li><code>libtiff</code></li>
-                  <li><code>glib</code></li>
-                </ul>
-              </ul>
+              <div style="display: flex; flex-direction: row;">
+                <div style="padding: 1em;"><ul>
+                  <li>Required</li>
+                  <ul>
+                    <li><code>libiconv</code></li>
+                    <li><code>zlib</code></li>
+                    <li><code>bzip2</code></li>
+                    <li><code>lzma</code></li>
+                    <li><code>pcre2</code></li>
+                    <li><code>libcurl</code></li>
+                  </ul></ul></div>
+                <div style="padding: 1em;"><ul>
+                  <li>Optional</li>
+                  <ul>
+                    <li><code>libpng</code></li>
+                    <li><code>cairo</code></li>
+                    <li><code>libtiff</code></li>
+                    <li><code>glib</code></li>
+                  </ul>
+                </ul></div>
+              </div>
             </div>
             <div class="column-top-align">
               <img src="/src/images/fortran_logo.svg" alt="Fortran language logo" style="height: 4em;">
@@ -138,11 +141,11 @@
           <h2>LLVM Flang</h2>
           <div class="two-column">
             <div class="column">
-              <video src="/src/videos/digits.webm" autoplay loop muted playsinline style="max-width: 90%; margin-top: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);"></video>
-              <p><a href="https://gws.phd/posts/fortran_wasm/"><strong>Fortran on WebAssembly</strong>: Patching LLVM Flang to output WebAssembly objects</a></p>
+              <video src="/src/videos/digits.webm" autoplay loop muted playsinline style="margin-bottom: 1rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);"></video>
+              <p><a href="https://gws.phd/posts/fortran_wasm/" target="_blank"><strong>Fortran on WebAssembly</strong>: Patching LLVM Flang to output WebAssembly objects</a></p>
               <p>by George Stagg</p>
             </div>
-            <div class="column">
+            <div class="column" style="width: 55%;">
               <h3>Serge Guelton</h3>
               <ul>
                 <li style="margin: 0;">Upstreamed contributions:</li>
@@ -174,6 +177,11 @@
             <pre><code data-trim data-line-numbers class="language-bash">
             micromamba install conda-forge/label/emscripten::flang libllvm20 --no-channel-priority
             </code></pre>
+        </section>
+
+        <section>
+          <h2>Assembling the Toolchain</h2>
+          <img src="/src/images/toolchain.svg" alt="Diagram of Fortran and C/C++ to WebAssembly toolchain with Emscripten and Flang">
         </section>
 
         <section>
