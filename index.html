@@ -90,6 +90,7 @@
                   <li><code>bzip2</code></li>
                   <li><code>lzma</code></li>
                   <li><code>pcre2</code></li>
+                  <li><code>libcurl</code></li>
                 </ul>
                 <li style="margin: 0;">Optional</li>
                 <ul>
@@ -164,7 +165,11 @@
 
         <section>
           <h2>LLVM Flang in Action</h2>
-            <pre><code data-trim data-noescape>
+            <pre><code data-trim data-line-numbers class="language-python">
+            import hello from scipy
+            import hello
+            </code></pre>
+            <pre><code data-trim data-line-numbers class="language-bash">
             micromamba install conda-forge/label/emscripten::flang libllvm20 --no-channel-priority
             </code></pre>
         </section>
