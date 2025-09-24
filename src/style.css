@@ -435,6 +435,11 @@ div .column img:not(.image-transparent){
 
 .jlite-iframe {
     height: 85%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+}
+
+.jlite-iframe iframe {
+  zoom: 1.5;
 }
 
 /*********************************************
