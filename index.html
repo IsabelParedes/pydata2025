@@ -184,15 +184,71 @@
           <h2 class="main-title">JupyterLite Terminal</h1>
         </section>
 
-        <section data-markdown>
-          <textarea data-template>
-            ## Slide 1
-            A paragraph with some text
-            ---
-            ## Slide 2
-            ---
-            ## Slide 3
-          </textarea>
+        <section>
+          <h2>Terminal</h2>
+          <div style="margin: 1em;">
+          <h3>In JupyterLab</h3>
+            <ul>
+              <li>Terminal connects to a real shell running on the server</li>
+            </ul>
+          </div>
+          <div style="margin: 1em;">
+          <h3>In JupyterLite</h3>
+            <ul>
+              <li>Terminal connects to a shell emulator running in the browser</li>
+              <li>Mixture of TypeScript and WebAssembly</li>
+              <li>Two projects
+                <ul>
+                  <li><a href="https://github.com/jupyterlite/cockle">cockle</a>: standalone shell without any JupyterLite dependencies</li>
+                  <li><a href="https://github.com/jupyterlite/terminal">terminal</a>: JupyterLite extension using cockle</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>Demo of JupyterLite Terminal</h2>
+          <h3><a href="https://jupyterlite.github.io/terminal">https://jupyterlite.github.io/terminal</a></h3>
+          <ul>
+            <li>Access the shared JupyterLite file system</li>
+            <li>List commands available</li>
+            <li>Editors <code>vim</code> and <code>nano</code></li>
+            <li><code>uname -a</code> shows it is an emscripten build</li>
+            <li><code>cockle-config package</code> shows installed emscripten-forge packages</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Emscripten Forge packages for Terminal</h2>
+          <ul>
+            <li><code>coreutils</code>, <code>grep</code>, <code>less</code>, <code>nano</code>, <code>sed</code>, <code>vim</code></li>
+            <li>Example recipe <a href="https://github.com/emscripten-forge/recipes/tree/main/recipes/recipes_emscripten/vim">vim</a></li>
+            <ul>
+              <li><code>recipe.yaml</code></li>
+              <ul>
+                <li><code>source url</code> shows source from official vim repo</li>
+                <li>Small patch</li>
+                <li>Depends on <code>ncurses</code></li>
+              </ul>
+              <li>Build script <code>build.sh</code></li>
+              <ul>
+                <li>C source code</li>
+                <li>Familiar <code>configure</code> and <code>make</code> build steps</li>
+                <li>Outputs <code>vim.js</code>, <code>vim.wasm</code> and <code>vim.data</code></li>
+              </ul>
+            </ul>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Looking ahead: git</h3>
+          <ul>
+            <li><a href="https://github.com/QuantStack/git2cpp">git2cpp</a> (C++) wraps <a href="https://github.com/libgit2/libgit2">libgit2</a> (C) to provide command-line tools</li>
+            <li>Emscripten Forge builds patched to communicate with remote hosts</li>
+            <li>Basic functionality (clone, add, commit) almost ready...</li>
+            <li>Incremental addition of new functionality</li>
+          </ul>
         </section>
 
         <section class="cosmo-slide">
