@@ -165,9 +165,11 @@
 
         <section>
           <h2>LLVM Flang in Action</h2>
-            <pre><code data-trim data-line-numbers class="language-python">
-            import hello from scipy
-            import hello
+            <pre><code data-trim data-line-numbers class="language-fortran">
+            program hello
+              print *, “Hello, Fortran”
+            end program hello
+
             </code></pre>
             <pre><code data-trim data-line-numbers class="language-bash">
             micromamba install conda-forge/label/emscripten::flang libllvm20 --no-channel-priority
@@ -267,16 +269,18 @@
           </ul>
         </section>
 
-        <section class="cosmo-slide">
-          <img src="/src/images/cosmo_rocket.png" alt="QuantStack Logo" class="cosmo-img">
-          <h2 class="main-title">Thank You!</h1>
-        </section>
-
-        <section data-markdown>
-          <textarea data-template>
-            ## Resources
-            A paragraph with some text
-          </textarea>
+        <section>
+          <h2>Questions?</h2>
+          <div class="two-column">
+            <div class="column" style="width: 60%;">
+              <img src="/src/images/cosmo_rocket.png" alt="QuantStack Logo">
+              <h3 class="main-title">Thank You!</h3>
+            </div>
+            <div class="column">
+              <img src="/src/images/qr-code.svg" alt="QR code for slides"  style="margin: 2em;">
+              <p><a href="https://isabelparedes.github.io/pydata2025/" target="_blank">IsabelParedes.github.io/pydata2025/</a></p>
+            </div>
+          </div>
         </section>
 
       </div>
