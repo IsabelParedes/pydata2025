@@ -185,6 +185,22 @@
         </section>
 
         <section>
+          <h2>Cross-Compilation of R</h2>
+          <div class="single-column">
+          <ul>
+            <li><strong>Phase 1:</strong> Host</li>
+            <ul>
+              <li>Build a minimal native version of R for Linux with GCC and Flang</li>
+              <li>This generates the tools required for Phase 2 (R and Rscript binaries)</li>
+            </ul>
+            <li><strong>Phase 2:</strong> Target</li>
+            <ul>
+              <li>Cross-compile to WebAssembly with Emscripten and Flang</li>
+            </ul>
+          </ul></div>
+        </section>
+
+        <section>
           <h2>Xeus-R-Lite</h2>
           <div class="jlite-iframe">
             <iframe src="https://isabelparedes.github.io/pydata2025-r/lab/?path=demo.ipynb" width="100%" height="100%" style="border: none;"></iframe>
