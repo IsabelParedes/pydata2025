@@ -447,6 +447,87 @@
         </section>
 
         <section>
+          <h2>Xeus-R</h2>
+          <div class="two-column">
+            <div class="column">
+              <img src="/src/images/package-xeus-r.svg" alt="Cardboard box of xeus-r package" width="80%">
+            </div>
+            <div class="column">
+              <pre style="width: 100%;"><code data-trim data-line-numbers class="language-yaml">
+              package:
+                name: xeus-r
+                version: 0.8.1
+
+              source:
+                url: https://github.com/jupyter-xeus/xeus-r/archive/refs/tags/${{ version }}.tar.gz
+                sha256: 032fe1e337b67bb35b965a8d7535a3a1cd1c0e69e74d03af12acde06b4b83490
+
+              build:
+                number: 0
+
+              requirements:
+                build:
+                - ${{ compiler("cxx") }}
+                - cmake
+                - make
+                # Dependencies to build hera
+                - cross-r-base_${{ target_platform }}
+                - r-base == ${{ r_base_version }}
+                - r-cli
+                - r-evaluate
+                - r-glue
+                - r-IRdisplay
+                - r-R6
+                - r-repr
+                host:
+                - nlohmann_json
+                - nlohmann_json-abi
+                - xeus
+                - xeus-lite
+                - pcre2>=10.43
+                - zlib>=1.2.13
+                - libflang
+                - xz
+                - bzip2
+                - libiconv
+                - r-base == ${{ r_base_version }}
+                run:
+                - r-base == ${{ r_base_version }}
+                - r-cli
+                - r-evaluate
+                - r-glue
+                - r-IRdisplay
+                - r-jsonlite
+                - r-R6
+                - r-repr
+                - r-rlang
+
+              tests:
+              - package_contents:
+                  files:
+                  - bin/xr.js
+                  - bin/xr.wasm
+
+              about:
+                license: GPL-3.0-only
+                license_family: GPL
+                license_file: LICENSE
+                summary: Jupyter kernel for the R programming language
+                homepage: https://github.com/jupyter-xeus/xeus-r
+                documentation: https://xeus-r.readthedocs.io
+
+              extra:
+                recipe-maintainers:
+                - IsabelParedes
+                - anutosh491
+              </code></pre>
+              <p></p>
+              <p><a href="https://github.com/emscripten-forge/recipes/blob/main/recipes/recipes_emscripten/xeus-r/recipe.yaml" target="_blank">recipe.yaml</a></p>
+            </div>
+          </div>
+        </section>
+
+        <section>
           <h2>Xeus-R-Lite</h2>
           <div class="jlite-iframe">
             <iframe src="https://isabelparedes.github.io/pydata2025-r/lab/?path=demo.ipynb" width="100%" height="100%" style="border: none;"></iframe>
