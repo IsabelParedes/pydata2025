@@ -201,6 +201,26 @@
         </section>
 
         <section>
+          <h2>Modifications to R Source Code</h2>
+          <div class="single-column">
+            <ul>
+              <li>Add <code>wasm32-unknown-emscripten</code> as a recognized target platform</li>
+              <li>Use <code>R</code> and <code>Rscript</code> from Phase 1</li>
+              <li>Load the shared libraries from Phase 1</li>
+              <ul>
+                <li>Required to create the R Data Base (<code>.rdb</code>) and R Data Index (<code>.rdx</code>) files</li>
+              </ul>
+              <li>Remove dependency on <code>libcurl</code></li>
+              <ul>
+                <li>Disable <code>internet</code> package</li>
+              </ul>
+              <li>Set default graphics device to <code>cairo</code> instead of <code>X11</code></li>
+            </ul>
+          </div>
+          <p><a href="https://github.com/emscripten-forge/recipes/tree/main/recipes/recipes_emscripten/r-base/patches" target="_blank">[full list of patches]</a></p>
+        </section>
+
+        <section>
           <h2>Xeus-R-Lite</h2>
           <div class="jlite-iframe">
             <iframe src="https://isabelparedes.github.io/pydata2025-r/lab/?path=demo.ipynb" width="100%" height="100%" style="border: none;"></iframe>
