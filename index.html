@@ -209,6 +209,7 @@
               <li>Load the shared libraries from Phase 1</li>
               <ul>
                 <li>Required to create the R Data Base (<code>.rdb</code>) and R Data Index (<code>.rdx</code>) files</li>
+                <li>Package <code>cross-r-base_emscripten-wasm32</code></li>
               </ul>
               <li>Remove dependency on <code>libcurl</code></li>
               <ul>
@@ -218,6 +219,168 @@
             </ul>
           </div>
           <p><a href="https://github.com/emscripten-forge/recipes/tree/main/recipes/recipes_emscripten/r-base/patches" target="_blank">[full list of patches]</a></p>
+        </section>
+
+        <section>
+          <h2><code>r-base</code></h2>
+          <div class="two-column" style="min-height: 60%;">
+            <div class="column" style="width: 50%;">
+              <p><a href="https://github.com/emscripten-forge/recipes/blob/main/recipes/recipes_emscripten/r-base/recipe.yaml" target="_blank"><code>recipe.yaml</code></a></p>
+              <pre><code data-trim data-line-numbers class="language-yaml">
+                context:
+                  name: r-base
+                  version: 4.5.1
+
+                package:
+                  name: ${{ name }}
+                  version: ${{ version }}
+
+                source:
+                  url: https://cran.r-project.org/src/base/R-4/R-${{ version }}.tar.gz
+                  sha256: b42a7921400386645b10105b91c68728787db5c4c83c9f6c30acdce632e1bb70
+                  patches:
+                  - patches/0001-Add-emscripten-platform-to-configure-script.patch
+                  - patches/0002-Disable-libcurl.patch
+                  - patches/0003-Disable-internet-module.patch
+                  - patches/0004-Fix-iconv-checks-when-using-internal-lapack-blas.patch
+                  - patches/0005-Add-sigsuspend-stub-for-Emscripten-compatibility.patch
+                  - patches/0006-Disable-which-for-emscripten.patch
+                  - patches/0007-Set-cairo-as-default-bitmap-type.patch
+                  - patches/0008-Use-source-files-directly.patch
+                  - patches/0009-Install-.wasm-files.patch
+                  - patches/0010-Fix-extern-C-error-expected-an-identifier.patch
+                  - patches/0011-Remove-png-lib-from-bitmap-libs.patch
+                  - patches/0012-Use-linux-executables.patch
+                  - patches/0013-Use-source-files-when-installing.patch
+
+                build:
+                  number: 0
+
+                requirements:
+                  build:
+                  - ${{ compiler('c') }}
+                  - ${{ compiler('cxx') }}
+                  - flang_${{ target_platform }}
+                  - libtool
+                  - pkg-config
+                  - cmake
+                  - make
+                  # Dependencies to build R in the build environment
+                  - gcc
+                  - libiconv
+                  - zlib>=1.2.13
+                  - bzip2
+                  - xz
+                  - pcre2>=10.43
+                  - libpng
+                  - libtiff
+                  - cairo >=1.18
+                  host:
+                  - libflang
+                  - libiconv
+                  - zlib>=1.2.13
+                  - bzip2
+                  - xz
+                  - pcre2>=10.43
+                  - libpng
+                  - libtiff
+                  - cairo >=1.18
+                  - fontconfig >=2.15
+                  - pixman
+                  - expat
+                  - freetype
+
+                tests:
+                - package_contents:
+                    lib:
+                    - R/lib/libR.a
+                    - R/lib/libRblas.so
+                    - R/lib/libRlapack.so
+                    - R/library/grDevices/libs/cairo.so
+                - script:
+                  - node ${PREFIX}/lib/R/bin/Rscript --version
+                  requirements:
+                    build:
+                    - nodejs
+
+                about:
+                  homepage: http://www.r-project.org/
+                  license: GPL-2.0-or-later
+                  license_family: GPL
+                  license_file: COPYING
+                  summary: |
+                    R is a free software environment for statistical computing and graphics.
+
+                extra:
+                  recipe-maintainers:
+                  - IsabelParedes
+              </code></pre>
+            </div>
+            <div class="column" style="width: 50%;">
+<p><a href="https://github.com/emscripten-forge/recipes/blob/main/recipes/recipes_emscripten/r-base/build.sh" target="_blank"><code>build.sh</code></a></p>
+              <pre><code data-trim data-line-numbers class="language-bash">
+              #-------------------------------------------------------------------------------
+              # PHASE 1
+              #-------------------------------------------------------------------------------
+              # Building R for Linux so that we can use the R and Rscript binaries to build
+              # the R internal modules for WebAssembly.
+
+              mkdir -p _build_linux
+              pushd _build_linux
+              (
+                  export PKG_CONFIG_PATH=$BUILD_PREFIX/lib/pkgconfig
+                  export PREFIX=$BUILD_PREFIX
+                  export CC=gcc
+                  export CXX=g++
+                  export FC=flang-new
+                  export CPPFLAGS="-I$BUILD_PREFIX/include"
+                  export LDFLAGS="-L$BUILD_PREFIX/lib"
+                  export FC_LEN_T=size_t
+                  export LINUX_BUILD_DIR=$(pwd)
+
+                  ../configure \
+                      --prefix=$BUILD_PREFIX \
+                      $CONFIG_ARGS
+
+                  make -j${CPU_COUNT}
+                  # No need to install, we just need the R binary
+              )
+              popd
+
+              #-------------------------------------------------------------------------------
+              # PHASE 2
+              #-------------------------------------------------------------------------------
+              # Building R for WebAssembly using the R binary from the Linux build.
+
+              mkdir -p _build_wasm
+              pushd _build_wasm
+              (
+                  cp $RECIPE_DIR/config.site .
+
+                  export CROSS_COMPILING="true"
+                  export R_EXECUTABLE=$(realpath ..)/_build_linux/bin/exec/R # binary not shell wrapper
+                  export R_SCRIPT_EXECUTABLE=$(realpath ..)/_build_linux/bin/Rscript
+                  export LINUX_BUILD_DIR=$(realpath ..)/_build_linux
+                  export WASM_BUILD_DIR=$(pwd)
+
+                  emconfigure ../configure \
+                      --prefix=$PREFIX    \
+                      --build="x86_64-conda-linux-gnu" \
+                      --host="wasm32-unknown-emscripten" \
+                      $CONFIG_ARGS
+
+                  emmake make -j${CPU_COUNT}
+
+                  $RECIPE_DIR/cross_libraries.sh --restore $(pwd)
+
+                  emmake make install
+
+              )
+              popd
+              </code></pre>
+            </div>
+          </div>
+          <img src="/src/images/package-r.svg" alt="Cardboard box with R language logo" height="30%">
         </section>
 
         <section>
