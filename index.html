@@ -681,6 +681,40 @@
         </section>
 
         <section>
+          <h2>Cross-Compilation of GNU Octave</h2>
+          <div class="two-column">
+            <div class="column" style="width: 45%;">
+              <ul style="list-style-type: '✅  ';">
+                <li>C/C++ compiler: Emscripten</li>
+                <li>Fortran compiler: LLVM Flang</li>
+              </ul>
+              <p></p>
+              <div style="width: 90%; text-align: left;"><h3>Dependencies:</h3>
+              <ul>
+                <li>Fortran runtime library</li>
+                <li>BLAS/LAPACK</li>
+                <ul>
+                  <li>Netlib LAPACK</li>
+                  <li>OpenBLAS</li>
+                </ul>
+                <li><code>pcre2</code></li>
+                <li><code>freetype</code></li>
+              </ul>
+              </div>
+            </div>
+            <div class="column" style="width: 55%;">
+              <img src="/src/images/package-octave.svg" alt="Cardboad box of GNU Octave package" width="40%">
+              <p></p>
+              <div style="width: 90%; text-align: left;"><h3>Modifications:</h3></div>
+              <ul>
+                <li>Add <code>wasm32-unknown-emscripten</code> support</li>
+                <li>Disable GUI functionality</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
           <h2>Xeus-Octave-Lite</h2>
           <div class="jlite-iframe">
             <iframe src="https://isabelparedes.github.io/pydata2025-octave/lab/?path=demo.ipynb" width="100%" height="100%" style="border: none;"></iframe>
