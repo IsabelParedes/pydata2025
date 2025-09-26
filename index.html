@@ -578,46 +578,178 @@
 
         <section>
           <h2>Demo of JupyterLite Terminal</h2>
-          <h3><a href="https://jupyterlite.github.io/terminal">https://jupyterlite.github.io/terminal</a></h3>
-          <ul>
-            <li>Access the shared JupyterLite file system</li>
-            <li>List commands available</li>
-            <li>Editors <code>vim</code> and <code>nano</code></li>
-            <li><code>uname -a</code> shows it is an emscripten build</li>
-            <li><code>cockle-config package</code> shows installed emscripten-forge packages</li>
-          </ul>
+          <div class="jlite-iframe">
+            <iframe src="https://jupyterlite.github.io/terminal" width="100%" height="100%" style="border: none;"></iframe>
+          </div>
+          <p style="font-size: 0.5em;"><a href="https://jupyterlite.github.io/terminal" target="_blank">[open in new tab]</a></p>
         </section>
 
         <section>
-          <h2>Emscripten Forge packages for Terminal</h2>
-          <ul>
-            <li><code>coreutils</code>, <code>grep</code>, <code>less</code>, <code>nano</code>, <code>sed</code>, <code>vim</code></li>
-            <li>Example recipe <a href="https://github.com/emscripten-forge/recipes/tree/main/recipes/recipes_emscripten/vim">vim</a></li>
+          <h2>Demo of JupyterLite Terminal 2</h2>
+          <div class="single-column">
             <ul>
-              <li><code>recipe.yaml</code></li>
-              <ul>
-                <li><code>source url</code> shows source from official vim repo</li>
-                <li>Small patch</li>
-                <li>Depends on <code>ncurses</code></li>
-              </ul>
-              <li>Build script <code>build.sh</code></li>
-              <ul>
-                <li>C source code</li>
-                <li>Familiar <code>configure</code> and <code>make</code> build steps</li>
-                <li>Outputs <code>vim.js</code>, <code>vim.wasm</code> and <code>vim.data</code></li>
-              </ul>
+              <li>Access the shared JupyterLite file system</li>
+              <li>List commands available</li>
+              <li>Editors <code>vim</code> and <code>nano</code></li>
+              <li><code>uname -a</code> shows it is an Emscripten build</li>
+              <li><code>cockle-config package</code> shows installed Emscripten-Forge packages</li>
             </ul>
-          </ul>
+          </div>
         </section>
 
         <section>
-          <h2>Looking ahead: git</h3>
-          <ul>
-            <li><a href="https://github.com/QuantStack/git2cpp">git2cpp</a> (C++) wraps <a href="https://github.com/libgit2/libgit2">libgit2</a> (C) to provide command-line tools</li>
-            <li>Emscripten Forge builds patched to communicate with remote hosts</li>
-            <li>Basic functionality (clone, add, commit) almost ready...</li>
-            <li>Incremental addition of new functionality</li>
-          </ul>
+          <h2>vim Emscripten-Forge package</h2>
+          <div class="two-column">
+            <div class="column">
+              <p><a href="https://github.com/emscripten-forge/recipes/blob/main/recipes/recipes_emscripten/vim/recipe.yaml" target="_blank">recipe.yaml</a></p>
+              <pre style="width: 100%;"><code data-trim data-line-numbers class="language-yaml">
+                context:
+                  version: 9.1.0917
+
+                package:
+                  name: vim
+                  version: ${{ version }}
+
+                source:
+                  url: https://github.com/vim/vim/archive/refs/tags/v${{ version }}.tar.gz
+                  sha256: a5cdcfcfeb13dc4deddcba461d40234dbf47e61941cb7170c9ebe147357bb62d
+                  patches:
+                    - patches/0001-const-char-args.patch
+
+                build:
+                  number: 4
+
+                requirements:
+                  build:
+                    - ${{ compiler("c") }}
+                  host:
+                    - ncurses &lt;6.5
+
+                tests:
+                  - script:
+                    - test -f $PREFIX/bin/vim.data
+                    - test -f $PREFIX/bin/vim.js
+                    - test -f $PREFIX/bin/vim.wasm
+                  - script: |
+                      # Limit output to exclude compilation date and time.
+                      OUTPUT=$(run_modularized $PREFIX/bin/vim.js --version | head -1 | cut -c -22)
+                      if [[ "$OUTPUT" != "VIM - Vi IMproved 9.1 " ]]; then
+                        echo "Unexpected output: $OUTPUT"
+                        exit 1
+                      fi
+                    requirements:
+                      build:
+                        - run_modularized >= 0.1.2
+
+                about:
+                  license: Vim
+                  license_file: LICENSE
+
+                extra:
+                  recipe-maintainers:
+                    - ianthomas23
+              </code></pre>
+              <p>
+                <ul>
+                  <li>Source from official <code>vim</code> repo</li>
+                  <li>Small patch</li>
+                  <li>Depends on <code>ncurses</code></li>
+                </ul>
+              </p>
+            </div>
+            <div class="column">
+              <p><a href="https://github.com/emscripten-forge/recipes/blob/main/recipes/recipes_emscripten/vim/build.sh" target="_blank">build.sh</a></p>
+              <pre style="width: 100%;"><code data-trim data-line-numbers class="language-bash">
+                export NCURSES_CFLAGS=$($PREFIX/bin/ncurses6-config --cflags)
+                export NCURSES_LDFLAGS=$($PREFIX/bin/ncurses6-config --libs-only-L)
+                export XTERM_256COLOR=$($PREFIX/bin/ncurses6-config --terminfo)/x/xterm-256color
+                export VIMRC=$PWD/vimrc
+
+                echo $NCURSES_CFLAGS
+                echo $NCURSES_LDFLAGS
+                ls -l $XTERM_256COLOR
+
+                export CONFIG_CFLAGS="\
+                    $NCURSES_CFLAGS \
+                    -Os \
+                    "
+                export CONFIG_LDFLAGS="\
+                    $NCURSES_LDFLAGS \
+                    -Os \
+                    --minify=0 \
+                    -sALLOW_MEMORY_GROWTH=1 \
+                    -sEXIT_RUNTIME=1 \
+                    -sEXPORTED_RUNTIME_METHODS=FS,ENV,getEnvStrings,TTY \
+                    -sFORCE_FILESYSTEM=1 \
+                    -sMODULARIZE=1 \
+                    -sLZ4 \
+                    "
+
+                emconfigure ./configure \
+                    --disable-nls \
+                    --disable-xattr \
+                    --host=wasm32-unknown-emscripten \
+                    --with-compiledby=emscripten-forge \
+                    --with-features=normal \
+                    --with-tlib=tinfo \
+                    CFLAGS="$CFLAGS $CONFIG_CFLAGS" \
+                    LDFLAGS="$LDFLAGS $CONFIG_LDFLAGS" \
+                    ac_cv_sizeof_int=4 \
+                    ac_cv_sizeof_long=8 \
+                    ac_cv_sizeof_off_t=4 \
+                    ac_cv_sizeof_time_t=4 \
+                    ac_cv_func_ftruncate=no
+
+                # Use /etc/vimrc for system vimrc file and turn some features on and off.
+                sed -ri "s/.*(#define SYS_VIMRC_FILE\s.*)/\1/" src/feature.h
+                echo "syntax on" > $VIMRC
+                echo "set termguicolors" >> $VIMRC
+                echo "set nobackup" >> $VIMRC
+                echo "set noswapfile" >> $VIMRC
+                echo "set nowritebackup" >> $VIMRC
+
+                # Installs runtime config files under $PWD/usr/local/share/vim
+                DESTDIR=$PWD make -C src installruntime
+
+                emmake make EXEEXT=.js -j4 LDFLAGS=" \
+                    $LDFLAGS \
+                    $CONFIG_LDFLAGS \
+                    --preload-file $PWD/usr/local/share/vim/vim91@/usr/local/share/vim/vim91 \
+                    --exclude-file $PWD/usr/local/share/vim/vim91/lang \
+                    --exclude-file $PWD/usr/local/share/vim/vim91/doc \
+                    --exclude-file $PWD/usr/local/share/vim/vim91/tutor \
+                    --preload-file $XTERM_256COLOR@/usr/local/share/terminfo/x/xterm-256color \
+                    --preload-file $VIMRC@/etc/vimrc \
+                    "
+
+                mkdir -p $PREFIX/bin
+                cp src/vim.{data,js,wasm} $PREFIX/bin/
+              </code></pre>
+              <p>
+                <ul>
+                  <li><code>configure</code> and <code>make</code> steps</li>
+                  <li>Creates <code>vim.js</code>, <code>vim.wasm</code> and <code>vim.data</code></li>
+                </ul>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Looking ahead: git</h2>
+          <div class="two-column">
+            <div class="column" style="width: 50%;">
+              <ul>
+                <li><a href="https://github.com/QuantStack/git2cpp">git2cpp</a> (C++) wraps <a href="https://github.com/libgit2/libgit2">libgit2</a> (C) to provide command-line tools</li>
+                <li>Emscripten Forge builds patched to communicate with remote hosts</li>
+                <li>Basic functionality almost ready ...</li>
+                <li>Incrementally add new functionality</li>
+              </ul>
+            </div>
+            <div class="column">
+              <img src="/src/images/terminal-git.png" alt="git2cpp running in cockle">
+            </div>
+            </div>
         </section>
 
         <section>
