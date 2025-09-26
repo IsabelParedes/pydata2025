@@ -438,6 +438,7 @@ div .single-column {
   align-items: center;
 }
 
+div .single-column .img-shadow,
 div .column .img-shadow {
   filter: drop-shadow(0 5px 15px #33333366);
 }

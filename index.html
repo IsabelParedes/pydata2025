@@ -290,16 +290,14 @@
         </section>
 
         <section>
-          <h2>LLVM Flang in Action</h2>
-            <pre><code data-trim data-line-numbers class="language-fortran">
-            program hello
-              print *, “Hello, Fortran”
-            end program hello
-
+          <h2>LLVM Flang</h2>
+          <div class="single-column">
+            <img src="/src/images/conda-forge_flang.png" alt="Screenshot of flang feedstock repo on conda-forge" class="img-shadow" style="max-width: 60%;">
+            <p><a href="https://github.com/conda-forge/flang-feedstock/tree/emscripten" target="_blank">github.com/conda-forge/flang-feedstock/tree/emscripten</a></p>
+            <pre><code data-trim class="language-bash">
+            micromamba install conda-forge/label/emscripten::flang --no-channel-priority
             </code></pre>
-            <pre><code data-trim data-line-numbers class="language-bash">
-            micromamba install conda-forge/label/emscripten::flang libllvm20 --no-channel-priority
-            </code></pre>
+          </div>
         </section>
 
         <section>
