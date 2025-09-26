@@ -715,6 +715,96 @@
         </section>
 
         <section>
+          <h2>Fortran Challenges</h2>
+          <div class="two-column">
+            <div class="column" style="width: 40%;">
+              <pre style="width: 100%;"><code data-trim data-line-numbers="11" class="language-fortran">
+              C-----------------------------------------------------------------------
+              C The following internal Common block contains
+              C (a) variables which are local to any subroutine but whose values must
+              C     be preserved between calls to the routine ("own" variables), and
+              C (b) variables which are communicated between subroutines.
+              C The block SLS001 is declared in subroutines SLSODE, SINTDY, SSTODE,
+              C SPREPJ, and SSOLSY.
+              C Groups of variables are replaced by dummy arrays in the Common
+              C declarations in routines where those variables are not used.
+              C-----------------------------------------------------------------------
+                    COMMON /SLS001/ CONIT, CRATE, EL(13), ELCO(13,12),
+                  1   HOLD, RMAX, TESCO(3,12),
+                  1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
+                  2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH,
+                  3   IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
+                  3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
+                  4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
+                  5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+              C
+                    DATA  MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
+              </code></pre>
+              <p></p>
+              <p style="font-size: 0.8em;"><code>liboctave/external/odepack/slsode.f</code></p>
+            </div>
+            <div class="column" style="width: 55%;">
+              <pre style="width: 100%;"><code data-trim data-line-numbers class="language-cpp">
+              void MCWasmStreamer::emitCommonSymbol(MCSymbol *S, uint64_t Size,
+                                                    Align ByteAlignment) {
+                llvm_unreachable("Common symbols are not yet implemented for Wasm");
+              }
+              </code></pre>
+              <p></p>
+              <p style="font-size: 0.8em;"><a href="https://github.com/llvm/llvm-project/blob/bba91727789bed302758dac282107a44c7b33504/llvm/lib/MC/MCWasmStreamer.cpp#L132" target="_blank"><code>llvm/lib/MC/MCWasmStreamer.cpp</code></a></p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Patching LLVM</h2>
+          <div class="single-column">
+          <pre><code data-trim data-line-numbers class="language-diff">
+          From 703b5fa8bd61289c8664ef603da8c502cb595ac7 Mon Sep 17 00:00:00 2001
+          From: serge-sans-paille <sguelton@mozilla.com>
+          Date: Tue, 8 Jul 2025 17:02:04 +0200
+          Subject: Simulate common symbols as weak
+
+          ---
+          llvm/lib/MC/MCWasmStreamer.cpp | 12 ++++++++++--
+          1 file changed, 10 insertions(+), 2 deletions(-)
+
+          diff --git a/llvm/lib/MC/MCWasmStreamer.cpp b/llvm/lib/MC/MCWasmStreamer.cpp
+          index 8560f0ebe..f8a83e01a 100644
+          --- a/llvm/lib/MC/MCWasmStreamer.cpp
+          +++ b/llvm/lib/MC/MCWasmStreamer.cpp
+          @@ -150,7 +150,11 @@ bool MCWasmStreamer::emitSymbolAttribute(MCSymbol *S, MCSymbolAttr Attribute) {
+
+          void MCWasmStreamer::emitCommonSymbol(MCSymbol *S, uint64_t Size,
+                                                Align ByteAlignment) {
+          -  llvm_unreachable("Common symbols are not yet implemented for Wasm");
+          +  // llvm_unreachable("Common symbols are not yet implemented for Wasm");
+          +  auto *Symbol = cast<MCSymbolWasm>(S);
+          +  getAssembler().registerSymbol(*Symbol);
+          +  Symbol->setWeak(true);
+          +  Symbol->setExternal(true);
+          }
+
+          void MCWasmStreamer::emitELFSize(MCSymbol *Symbol, const MCExpr *Value) {
+          @@ -159,7 +163,11 @@ void MCWasmStreamer::emitELFSize(MCSymbol *Symbol, const MCExpr *Value) {
+
+          void MCWasmStreamer::emitLocalCommonSymbol(MCSymbol *S, uint64_t Size,
+                                                      Align ByteAlignment) {
+          -  llvm_unreachable("Local common symbols are not yet implemented for Wasm");
+          +  // llvm_unreachable("Local common symbols are not yet implemented for Wasm");
+          +  auto *Symbol = cast<MCSymbolWasm>(S);
+          +  getAssembler().registerSymbol(*Symbol);
+          +  Symbol->setWeak(true);
+          +  Symbol->setExternal(true);
+          }
+
+          void MCWasmStreamer::emitIdent(StringRef IdentString) {
+          </code></pre>
+          </div>
+          <p>Partial support for common linkage for WebAssembly (<a href="https://github.com/llvm/llvm-project/pull/151478" target="_blank">llvm-project/pull/151478</a>)</p>
+        </section>
+
+        <section>
           <h2>Xeus-Octave-Lite</h2>
           <div class="jlite-iframe">
             <iframe src="https://isabelparedes.github.io/pydata2025-octave/lab/?path=demo.ipynb" width="100%" height="100%" style="border: none;"></iframe>
