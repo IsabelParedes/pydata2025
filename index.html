@@ -33,21 +33,144 @@
           <h2 class="main-title">Introduction to Emscripten-Forge</h1>
         </section>
 
+        <section>
+          <h2>What is emscripten?</h2>
+          <div class="two-column">
+            <div class="column">
+              <ul>
+                <li>Toolchain to compile C/C++/Fortran to WebAssembly</li>
+                <li>Based on LLVM and Clang</li>
+                <li>Runs code in browsers and Node.js</li>
+              </div>
+            <div class="column">
+              <img src="/src/images/Emscripten_logo.svg" alt="Emscripten logo" style="width: 70%;">
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Use Cases</h2>
+          Emscripten can compile a wide variety of applications to WebAssembly.
+          <div class="two-column">
+            <div class="column">
+              <h2>DOOM</h2>
+              <div style="width: 100%; height: 500px;">
+                <iframe src="https://silentspacemarine.com/" width="100%" height="100%" style="border: none;"></iframe>
+              </div>
+              <p style="font-size: 0.7em;"><a href="https://silentspacemarine.com/" target="_blank">[open in new tab]</a></p>
+            </div>
+            <div class="column">
+              <h2>Python</h2>
+              <div style="width: 100%; height: 500px;">
+                <iframe src="https://jupyterlite.github.io/xeus-lite-demo/repl/?kernel=xpython&toolbar=1&code=import%20this" width="100%" height="500px" style="border: none;"></iframe>
+              </div>
+              <p style="font-size: 0.7em;"><a href="python in the browser" target="_blank">[open in new tab]</a></p>
+            </div>
+          </div>
+        </section>
+                      
+
+
+        <section>
+          <h2>What is conda-forge?</h2>
+          <div class="two-column">
+            <div class="column">
+              <ul>
+                <li>Distribution for conda packages</li>
+                <li>Community driven</li>
+                <li>Language agnostic</li>
+                <li>Multi platform</li>
+                <ul>
+                  <li>Linux</li>
+                  <li>macOS</li>
+                  <li>Windows</li>
+                  <li class="fragment">
+                   wasm is missing!
+                  </li>
+                </ul>
+                </ul>
+              </div>
+            <div class="column">
+              <img src="/src/images/logo_black_on_trans.png" alt="Conda forge logo" style="width: 70%;">
+            </div>
+          </div>
+        </section>
+                      
+        <section>
+          <h2>What is emscripten-forge?</h2>
+          <div class="two-column">  
+            <div class="column">
+              <ul>
+                <li>Distribution for conda packages</li>
+                <li>Specifically targets the <strong>emscripten-wasm32</strong> platform</li>
+                <li>Enables running C, C++, Fortran, Python, R, Lua and Octave  in the browser</li>
+                <li>Community-driven recipes</li>
+              </ul>
+            </div>
+            <div class="column">
+              <img src="/src/images/logo_emscripten_forge.svg" alt="Emscripten forge logo" style="width: 70%;">
+            </div>
+          </div>
+        </section>
+
+        
+
         <section class="cosmo-slide">
           <img src="/src/images/cosmo_victory_jlite.png" alt="QuantStack Logo" class="cosmo-img">
           <h2 class="main-title">Xeus Kernels in JupyterLite</h1>
         </section>
 
-        <section data-markdown>
-          <textarea data-template>
-            ## Slide 1
-            A paragraph with some text
-            ---
-            ## Slide 2
-            ---
-            ## Slide 3
-          </textarea>
+        <section>
+          <h3>Architecture</h3>
+          <div class="two-column">
+            <div class="mermaid">
+              <pre>
+              %%{init: {'theme': 'default', 'themeVariables': { 'darkMode': true }}}%%
+              graph LR
+                subgraph MyBox["Jupyter"]
+                  
+                  subgraph KernelProcess["Kernel Process"]
+                      kernel[Kernel]
+                  end
+
+                  subgraph ServerProcess["Server Process"]
+                      server[Server]
+                  end
+
+                  subgraph FrontendProcess["Browser"]
+                      frontend[Frontend]
+                  end
+
+                  kernel -- zmq  --> server -- websockets --> frontend
+
+                end
+              </pre>
+            </div>
+            <div class="mermaid">
+              <pre>
+              %%{init: {'theme': 'default', 'themeVariables': { 'darkMode': false }}}%%
+              graph LR
+
+              
+                subgraph MyBox["Jupyterlite"]
+       
+           
+                  subgraph WebWorker["WebWorker"]
+                      kernel2[Kernel]
+                  end
+
+                  subgraph MainThread["MainThread"]
+                      server2[Server] -- js --> frontend2[Frontend]
+                  end
+
+                  kernel2 --> server2
+                end
+
+              </pre>
+            </div>
+          </div>
         </section>
+
 
 
         <section class="cosmo-slide">
@@ -768,5 +891,6 @@
 
       </div>
 		</div>
+
   </body>
 </html>
