@@ -9,11 +9,13 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "rollup": "^4.52.2",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
   },
   "dependencies": {
     "@types/reveal.js": "^5.2.0",
-    "reveal.js": "^5.2.1"
+    "reveal.js": "^5.2.1",
+    "reveal.js-mermaid-plugin": "^11.6.0"
   }
 }
