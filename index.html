@@ -54,21 +54,35 @@
           <div class="two-column">
             <div class="column">
               <h2>DOOM</h2>
-              <div style="width: 100%; height: 500px;">
-                <iframe src="https://silentspacemarine.com/" width="100%" height="100%" style="border: none;"></iframe>
-              </div>
-              <p style="font-size: 0.7em;"><a href="https://silentspacemarine.com/" target="_blank">[open in new tab]</a></p>
+              <img src="/src/images/doom.jpg" alt="DOOM game screenshot" style="width: 70%;">
+              <p style="font-size: 0.7em;"><a href="https://silentspacemarine.com/" target="_blank">doom-wasm</a></p>
             </div>
             <div class="column">
               <h2>Python</h2>
-              <div style="width: 100%; height: 500px;">
-                <iframe src="https://jupyterlite.github.io/xeus-lite-demo/repl/?kernel=xpython&toolbar=1&code=import%20this" width="100%" height="500px" style="border: none;"></iframe>
-              </div>
-              <p style="font-size: 0.7em;"><a href="python in the browser" target="_blank">[open in new tab]</a></p>
+              <img src="/src/images/repl_pyodide.png" alt="Python logo" style="width: 70%;">
+              <p style="font-size: 0.7em;"><a href="https://pyodide.org/en/stable/" target="_blank">pyodide</a></p>
             </div>
           </div>
         </section>
                       
+
+        <section>
+          <h2>Use Cases</h2>
+          Emscripten can compile a wide variety of applications to WebAssembly.
+          <div class="two-column">
+            <div class="column">
+              <h2>LLVM / Clang</h2>
+              <img src="/src/images/llvm_wyvern.png" alt="LLVM / Clang logo" style="width: 70%;">
+              <p style="font-size: 0.7em;"><a href="https://prefix.dev/channels/emscripten-forge-dev/packages/llvm" target="_blank">llvm.wasm</a></p>
+            </div>
+            <div class="column">
+              <h2>OS Emulation</h2>
+              <img src="/src/images/x86emu.jpg" alt="copy.sh screenshot" style="width: 70%;">
+              <p style="font-size: 0.7em;"><a href="https://copy.sh" target="_blank">copy.sh</a></p>
+
+            </div>
+          </div>
+        </section>
 
 
         <section>
@@ -103,12 +117,19 @@
               <ul>
                 <li>Distribution for conda packages</li>
                 <li>Specifically targets the <strong>emscripten-wasm32</strong> platform</li>
-                <li>Enables running C, C++, Fortran, Python, R, Lua and Octave  in the browser</li>
                 <li>Community-driven recipes</li>
+                <li>Enables running C, C++, Fortran, Python, R, Lua and Octave  in the browser
+                  <div class="fragment">
+                     <bold>and in  jupyterlite</bold>
+                  </div>
+                </li>
+
+                
               </ul>
             </div>
             <div class="column">
               <img src="/src/images/logo_emscripten_forge.svg" alt="Emscripten forge logo" style="width: 70%;">
+              <p style="font-size: 0.7em;"><a href="https://emscripten-forge.org/" target="_blank">emscripten-forge.org</a></p>
             </div>
           </div>
         </section>
@@ -120,12 +141,89 @@
           <h2 class="main-title">Xeus Kernels in JupyterLite</h1>
         </section>
 
+
         <section>
-          <h3>Architecture</h3>
+          <h3>Jupyter Architecture</h3>
+            <div class="two-column">
+              <div class="column">
+                <div class="mermaid">
+                  <pre>
+                  %%{init: {'look':'handDrawn','theme': 'default', 'themeVariables': { 'darkMode': true }}}%%
+                  graph LR
+                    subgraph MyBox["Jupyter"]
+                      
+                      subgraph KernelProcess["Kernel Process"]
+                          kernel[Kernel]
+                      end
+
+                      subgraph ServerProcess["Server Process"]
+                          server[Server]
+                      end
+
+                      subgraph FrontendProcess["Browser"]
+                          frontend[Frontend]
+                      end
+
+                      kernel -- zmq  --> server -- websockets --> frontend
+
+                    end
+                  </pre>
+                </div>
+              </div>
+              <div class="column">
+                <ul>
+                  <li>Multiple processes</li>
+                  <li>Kernel and Server communicate via <code>zmq</code></li>
+                  <li>Server and Frontend communicate via <code>websockets</code></li>
+                </ul>
+              </div>
+            </div>
+        </section>
+
+        <section>
+          <h3>Jupyterlite Architecture</h3>
+ 
+            <div class="two-column">
+              <div class="column">
+                <div class="mermaid">
+                  <pre>
+                    %%{init: {'look':'handDrawn', 'theme': 'default', 'themeVariables': { 'darkMode': false}}}%%
+                  graph LR
+
+                  
+                    subgraph MyBox["Jupyterlite"]
+          
+              
+                      subgraph WebWorker["WebWorker"]
+                          kernel2[Kernel]
+                      end
+
+                      subgraph MainThread["MainThread"]
+                          server2[Server] --> frontend2[Frontend]
+                      end
+
+                      kernel2 -- postMessage --> server2
+                    end
+
+                  </pre>
+                </div>
+              </div>
+              <div class="column">
+                <ul>
+                  <li>Everything runs in the browser</li>
+                  <li>Kernel runs in separate <code>WebWorker</code></li>
+                  <li>Communication between Kernel and Server via <code>postMessage</code></li>
+                </ul>
+              </div>
+            </div>
+        </section>
+
+        <section>
+          <h3>Architecture Comparison</h3>
           <div class="two-column">
             <div class="mermaid">
               <pre>
-              %%{init: {'theme': 'default', 'themeVariables': { 'darkMode': true }}}%%
+              %%{init: {'look':'handDrawn','theme': 'default', 'themeVariables': { 'darkMode': true }}}%%
               graph LR
                 subgraph MyBox["Jupyter"]
                   
@@ -148,7 +246,7 @@
             </div>
             <div class="mermaid">
               <pre>
-              %%{init: {'theme': 'default', 'themeVariables': { 'darkMode': false }}}%%
+              %%{init: {'look':'handDrawn', 'theme': 'default', 'themeVariables': { 'darkMode': false }}}%%
               graph LR
 
               
@@ -170,6 +268,44 @@
             </div>
           </div>
         </section>
+
+        
+
+        <section>
+
+       
+          <div class="two-column">
+            <div class="column">
+              <h3>The kernel:</h3>
+              <ul>
+                <li>most important part of Jupyter</li>
+                <li>executes the code</li>
+                <li>multiple kernels available</li>
+                <li>can be implemented ontop of xeus:</li>
+                <ul>
+                  <li>c++ library to author kernels</li>
+                  <li>handles the Jupyter messaging protocol</li>
+                  <li>provides abstractions for common tasks</li>
+                </ul>
+              </ul>
+            </div>
+            <div class="column">
+              <div class="fragment">
+                <h3>xeus based kernels:</h3>
+                <ul>
+                  <li class="fragment">xeus-python</li>
+                    <li class="fragment">xeus-lua</li>
+                    <li class="fragment">xeus-sqlite</li>
+                    <li class="fragment">xeus-ocaml</li>
+                    <li class="fragment">xeus-javascript</li>
+                    <li class="fragment">xeus-r</li>
+                    <li class="fragment">xeus-octave</li>
+                    <li class="fragment">xeus-cpp </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section> 
 
 
 
