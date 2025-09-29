@@ -315,8 +315,8 @@
                 <li>Emscripten</li>
                 <li>Fortran compiler</li>
                 <ul>
-                  <li>Custom development version of <strong>LLVM Flang</strong></li>
-                  <li><code>gfortran</code> and Dragonegg</li>
+                  <li>Custom development version of <strong>LLVM Flang</strong> (v18)</li>
+                  <li>GCC and Dragonegg</li>
                 </ul>
               </ul>
             </div>
@@ -383,7 +383,7 @@
               <ul>
                 <li>Modern LLVM Integration</li>
                 <li>Active Development</li>
-                <li>WebAssembly Target Support</li>
+                <li>LLVM backend to target WebAssembly</li>
               </ul>
             </div>
             <div class="column">
@@ -410,7 +410,7 @@
                   <li><a href="https://github.com/llvm/llvm-project/pull/101242">Handle missing definitions in cfenv</a></li>
                   <li><a href="https://github.com/llvm/llvm-project/pull/105589">Fix type used to store result of typeInfo::Value::GetValue</a></li>
                 </ul>
-                <li style="margin: 0;">Additional patches:</li>
+                <li style="margin: 0;">Additional patches (v19):</li>
                 <ul>
                   <li><a href="https://github.com/conda-forge/flang-feedstock/blob/emscripten/recipe/patches/0002-Minimal-WASM-support-for-flang.patch">Minimal WASM support for Flang</a></li>
                   <li><a href="https://github.com/conda-forge/flang-feedstock/blob/emscripten/recipe/patches/0003-Specialize-Flang-to-target-WASM.patch">Specialize Flang to target WASM</a></li>
@@ -422,7 +422,7 @@
         </section>
 
         <section>
-          <h2>LLVM Flang</h2>
+          <h2>LLVM Flang (v20)</h2>
           <div class="single-column">
             <img src="/src/images/conda-forge_flang.png" alt="Screenshot of flang feedstock repo on conda-forge" class="img-shadow" style="max-width: 60%;">
             <p><a href="https://github.com/conda-forge/flang-feedstock/tree/emscripten" target="_blank">github.com/conda-forge/flang-feedstock/tree/emscripten</a></p>
@@ -444,7 +444,7 @@
             <li><strong>Phase 1:</strong> Host</li>
             <ul>
               <li>Build a minimal native version of R for Linux with GCC and Flang</li>
-              <li>This generates the tools required for Phase 2 (R and Rscript binaries)</li>
+              <li>This generates the tools required for Phase 2 (R and Rscript executables)</li>
             </ul>
             <li><strong>Phase 2:</strong> Target</li>
             <ul>
@@ -458,7 +458,7 @@
           <div class="single-column">
             <ul>
               <li>Add <code>wasm32-unknown-emscripten</code> as a recognized target platform</li>
-              <li>Use <code>R</code> and <code>Rscript</code> from Phase 1</li>
+              <li>Use <code>R</code> and <code>Rscript</code> executables from Phase 1</li>
               <li>Load the shared libraries from Phase 1</li>
               <ul>
                 <li>Required to create the R Data Base (<code>.rdb</code>) and R Data Index (<code>.rdx</code>) files</li>
@@ -513,7 +513,7 @@
                   build:
                   - ${{ compiler('c') }}
                   - ${{ compiler('cxx') }}
-                  - flang_${{ target_platform }}
+                  - flang_emscripten-wasm32
                   - libtool
                   - pkg-config
                   - cmake
@@ -521,24 +521,24 @@
                   # Dependencies to build R in the build environment
                   - gcc
                   - libiconv
-                  - zlib>=1.2.13
+                  - zlib
                   - bzip2
                   - xz
-                  - pcre2>=10.43
+                  - pcre2
                   - libpng
                   - libtiff
-                  - cairo >=1.18
+                  - cairo
                   host:
                   - libflang
                   - libiconv
-                  - zlib>=1.2.13
+                  - zlib
                   - bzip2
                   - xz
-                  - pcre2>=10.43
+                  - pcre2
                   - libpng
                   - libtiff
-                  - cairo >=1.18
-                  - fontconfig >=2.15
+                  - cairo
+                  - fontconfig
                   - pixman
                   - expat
                   - freetype
@@ -563,10 +563,6 @@
                   license_file: COPYING
                   summary: |
                     R is a free software environment for statistical computing and graphics.
-
-                extra:
-                  recipe-maintainers:
-                  - IsabelParedes
               </code></pre>
             </div>
             <div class="column" style="width: 50%;">
@@ -737,15 +733,15 @@
                 - nlohmann_json-abi
                 - xeus
                 - xeus-lite
-                - pcre2>=10.43
-                - zlib>=1.2.13
+                - pcre2
+                - zlib
                 - libflang
                 - xz
                 - bzip2
                 - libiconv
-                - r-base == ${{ r_base_version }}
+                - r-base
                 run:
-                - r-base == ${{ r_base_version }}
+                - r-base
                 - r-cli
                 - r-evaluate
                 - r-glue
@@ -768,11 +764,6 @@
                 summary: Jupyter kernel for the R programming language
                 homepage: https://github.com/jupyter-xeus/xeus-r
                 documentation: https://xeus-r.readthedocs.io
-
-              extra:
-                recipe-maintainers:
-                - IsabelParedes
-                - anutosh491
               </code></pre>
               <p></p>
               <p><a href="https://github.com/emscripten-forge/recipes/blob/main/recipes/recipes_emscripten/xeus-r/recipe.yaml" target="_blank">recipe.yaml</a></p>
